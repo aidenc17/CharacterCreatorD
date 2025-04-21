@@ -17,7 +17,6 @@ class CharacterCreatorViewModel : ViewModel() {
             val characterInfo = DataSource.loadCharacters()[newName] ?: CharacterInfo()
             currentState.copy(characterInfo = characterInfo,
                 stats = DataSource.statValues[DataSource.characterNames.indexOf(newName)])
-
         }
     }
 

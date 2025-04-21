@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,9 +45,20 @@ fun HomeScreen(
             marsUiState.photos.imgSrc,
             modifier.padding(top = contentPadding.calculateTopPadding())
         )
-        is MarsUiState.Loading -> Text("Loading")
+        is MarsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
         is MarsUiState.Error -> ErrorScreen(modifier = Modifier.fillMaxSize())
     }
+}
+
+@Composable
+fun LoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    Image(
+        modifier = modifier.size(200.dp),
+        painter = painterResource(id = R.drawable.loading_img),
+        contentDescription = stringResource(id = R.string.loading)
+    )
 }
 
 @Composable
@@ -61,6 +73,7 @@ fun ErrorScreen(modifier: Modifier = Modifier,
             painter = painterResource(R.drawable.ic_connection_error),
             contentDescription = stringResource(R.string.loading_failed)
         )
+        Text(text = stringResource(id = R.string.loading_failed))
     }
 }
 

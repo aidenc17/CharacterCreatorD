@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
 fun CharacterCardApp(modifier: Modifier = Modifier) {
     CardImage(
         CharacterInfo.myCharater,
+        toughness = viewModel.getToughness(),
         modifier = modifier
     )
 }
@@ -153,6 +154,7 @@ fun CardTextStats(
 @Composable
 fun CardImage(
     characterData: CharacterData,
+    toughness: Int,
     modifier: Modifier = Modifier
 ) {
 
