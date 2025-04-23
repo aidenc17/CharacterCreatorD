@@ -20,14 +20,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,14 +54,39 @@ fun HomeScreen(
 ) {
     when (marsUiState) {
         is MarsUiState.Success ->
-            MarsPhotoCard(
-                photo = marsUiState.photos,
-//            ResultScreen(
-//            marsUiState.photos.imgSrc,
-//            modifier.padding(top = contentPadding.calculateTopPadding())
-        )
+            PhotosGridScreen(photos = marsUiState.photos)
+//            MarsPhotoCard(
+//                photo = marsUiState.photos,
+////            ResultScreen(
+////            marsUiState.photos.imgSrc,
+////            modifier.padding(top = contentPadding.calculateTopPadding())
+//        )
         is MarsUiState.Loading -> LoadingScreen(modifier = Modifier.fillMaxSize())
         is MarsUiState.Error -> ErrorScreen(modifier = Modifier.fillMaxSize())
+    }
+}
+
+@Composable
+fun PhotosGridScreen(
+    photos: List<MarsPhoto>,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp)
+) {
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(150.dp),
+        modifier = modifier.padding(horizontal = 4.dp),
+        contentPadding = contentPadding
+    ) {
+        items(
+            items = photos,
+            key = { photo -> photo.id }
+        ) { photo ->
+            MarsPhotoCard(photo,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(1.5f))
+        }
     }
 }
 
@@ -63,15 +95,23 @@ fun MarsPhotoCard(
     photo: MarsPhoto,
     modifier: Modifier = Modifier
 ) {
-    AsyncImage(
-        model = ImageRequest.Builder(context = LocalContext.current)
-            .data(photo.imgSrc)
-            .crossfade(true)
-            .build(),
-        contentDescription = "",
-        modifier = Modifier.fillMaxWidth()
-
+    Card(
+        modifier = modifier,
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     )
+    {
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(photo.imgSrc)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+            //modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.ic_broken_image),
+            placeholder = painterResource(id = R.drawable.loading_img)
+        )
+    }
 }
 
 @Composable
@@ -86,7 +126,8 @@ fun LoadingScreen(
 }
 
 @Composable
-fun ErrorScreen(modifier: Modifier = Modifier,
+fun ErrorScreen(
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -118,6 +159,10 @@ fun ResultScreen(photos: String, modifier: Modifier = Modifier) {
 @Composable
 fun ResultScreenPreview() {
     MarsPhotosTheme {
-        ResultScreen(stringResource(R.string.placeholder_result))
+        val mockData = List(10) { MarsPhoto("$it", "") }
+        PhotosGridScreen(
+            mockData,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
