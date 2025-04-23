@@ -79,6 +79,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
 
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
     //implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -87,5 +88,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+
 
 }
